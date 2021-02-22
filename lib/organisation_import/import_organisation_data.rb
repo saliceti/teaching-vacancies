@@ -4,11 +4,33 @@ require "httparty"
 require "open-uri"
 
 class ImportOrganisationData
+  def run!
+    csv_metadata.each { |metadata| import_data(metadata) }
+  end
+
+  def self.mark_all_school_group_memberships_to_be_deleted!
+    SchoolGroupMembership.update_all(do_not_delete: false)
+  end
+
+  def self.delete_marked_school_group_memberships!
+    SchoolGroupMembership.where(do_not_delete: false).delete_all
+  end
+
   private
+
+  def import_data(csv_url:, csv_file_location:, method:)
+    save_csv_file(csv_url, csv_file_location)
+    CSV.foreach(csv_file_location, headers: true, encoding: "windows-1252:utf-8").each do |row|
+      Organisation.transaction do
+        send(method, row)
+      end
+    end
+    File.delete(csv_file_location)
+  end
 
   def create_organisation(row)
     organisation = convert_to_organisation(row)
-    organisation.save
+    organisation&.save
     organisation
   end
 
@@ -44,5 +66,9 @@ class ImportOrganisationData
       # you set them.
       organisation.send("#{attribute_name}=", value.presence)
     end
+  end
+
+  def datestring
+    Time.current.strftime("%Y%m%d")
   end
 end
