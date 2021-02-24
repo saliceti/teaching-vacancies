@@ -13,6 +13,7 @@ class ImportOrganisationData
   end
 
   def self.delete_marked_school_group_memberships!
+    Rollbar.error("The number I'm about to delete is: #{SchoolGroupMembership.where(do_not_delete: false).count}")
     SchoolGroupMembership.where(do_not_delete: false).delete_all
   end
 
