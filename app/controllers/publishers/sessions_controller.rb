@@ -1,12 +1,17 @@
-class Publishers::SessionsController < Publishers::BaseController
-  protect_from_forgery with: :null_session, only: %i[destroy]
+class Publishers::SessionsController < Devise::SessionsController
+  PUBLISHER_SESSION_KEYS = %i[
+    publisher_id_token
+    publisher_oid
+    publisher_multiple_organisations
+    organisation_urn
+    organisation_uid
+    organisation_la_code
+  ].freeze
 
-  skip_before_action :authenticate_publisher!, only: %i[destroy]
-  skip_before_action :update_publisher_last_activity_at, only: %i[destroy]
-  skip_before_action :check_session, only: %i[destroy]
-  skip_before_action :check_terms_and_conditions, only: %i[destroy]
+  def new; end
 
   def destroy
-    redirect_to logout_endpoint
+    PUBLISHER_SESSION_KEYS.each { |key| session.delete(key) }
+    super
   end
 end

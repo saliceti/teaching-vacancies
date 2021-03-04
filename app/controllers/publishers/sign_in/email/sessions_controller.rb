@@ -1,7 +1,6 @@
 class Publishers::SignIn::Email::SessionsController < Publishers::SignIn::BaseSessionsController
   EMERGENCY_LOGIN_KEY_DURATION = 10.minutes
 
-  skip_before_action :check_session
   skip_before_action :check_terms_and_conditions
 
   before_action :redirect_signed_in_publishers,
@@ -56,6 +55,9 @@ class Publishers::SignIn::Email::SessionsController < Publishers::SignIn::BaseSe
 
   def update_session_except_org_id(options)
     return unless options[:oid]
+
+    publisher = Publisher.find_by(oid: options[:oid])
+    sign_in(publisher)
 
     session.update(
       publisher_oid: options[:oid],

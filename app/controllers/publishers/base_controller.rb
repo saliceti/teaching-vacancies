@@ -2,18 +2,11 @@ class Publishers::BaseController < ApplicationController
   TIMEOUT_PERIOD = 60.minutes
 
   before_action :authenticate_publisher!,
-                :update_publisher_last_activity_at,
-                :check_session,
                 :check_terms_and_conditions
 
   include ActionView::Helpers::DateHelper
 
   helper_method :current_publisher
-
-  def check_session
-    redirect_to new_identifications_path unless
-      session[:organisation_urn].present? || session[:organisation_uid].present? || session[:organisation_la_code].present?
-  end
 
   def check_terms_and_conditions
     redirect_to terms_and_conditions_path unless current_publisher&.accepted_terms_and_conditions?
@@ -29,20 +22,6 @@ class Publishers::BaseController < ApplicationController
     return unless current_organisation.is_a?(SchoolGroup)
 
     PublisherPreference.find_by(publisher_id: current_publisher.id, school_group_id: current_organisation.id)
-  end
-
-  def authenticate_publisher!
-    return redirect_to(new_identifications_path) unless current_publisher
-    return redirect_to(logout_endpoint) if current_publisher.last_activity_at.blank?
-
-    return unless Time.current > (current_publisher.last_activity_at + TIMEOUT_PERIOD)
-
-    session[:publisher_signing_out_for_inactivity] = true
-    redirect_to logout_endpoint
-  end
-
-  def update_publisher_last_activity_at
-    current_publisher&.update(last_activity_at: Time.current)
   end
 
   def logout_endpoint

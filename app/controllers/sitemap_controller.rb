@@ -22,7 +22,7 @@ class SitemapController < ApplicationController
   end
 
   def add_new_identifications(map)
-    map.add new_identifications_path, period: "weekly", priority: 0.8
+    map.add new_publisher_session_path, period: "weekly", priority: 0.8
   end
 
   def add_locations(map)
