@@ -1,5 +1,7 @@
+@import '~govuk-frontend/govuk/base';
+
 .card-component {
-  border-bottom: 1px solid $govuk-border-colour;
+  border-bottom: 1px solid govuk-colour("mid-grey");
   display: flex;
   margin: 0 0 govuk-spacing(4);
   padding-bottom: govuk-spacing(3);

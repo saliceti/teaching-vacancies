@@ -1,4 +1,4 @@
-class Shared::FiltersComponentPreview < ViewComponent::Preview
+class FiltersComponentPreview < ViewComponent::Preview
   layout "preview"
 
   @options = [
@@ -10,7 +10,7 @@ class Shared::FiltersComponentPreview < ViewComponent::Preview
     OpenStruct.new(id: 'small', name: 'small size checkboxes'),
   ]
 
-  @form = Shared::FiltersComponentPreview::Form
+  @form = FiltersComponentPreview::Form
 
   def self.form
     @form

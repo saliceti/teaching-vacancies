@@ -2,8 +2,8 @@ doctype html
 html.govuk-template.app-html-class class=("modal" if current_variant?(:"2021_02_cookie_consent_test", :modal) && !cookies_preference_set?) lang="en"
   head
     = render partial: "shared/google_tag_manager_head" if cookies["consented-to-cookies"] == "yes"
-    = render partial: "shared/open_graph"
-    = render partial: "shared/meta"
+    / = render partial: "shared/open_graph"
+    / = render partial: "shared/meta"
     meta charset="utf-8"
     title #{content_for :page_title_prefix} — #{t("app.title")}
     meta content="width=device-width, initial-scale=1" name="viewport"

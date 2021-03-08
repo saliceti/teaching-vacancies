@@ -1,5 +1,5 @@
 class PreviewController < ApplicationController
-  include ParameterSanitiser
+  attr_accessor :previews
 
   around_action :set_locale, only: :previews
   before_action :find_preview, only: :previews
@@ -12,11 +12,12 @@ class PreviewController < ApplicationController
     else
       @previews = ViewComponent::Preview.all
       @page_title = "Component Previews"
-      render "view_components/index", **determine_layout
+      render "design_system/index", **determine_layout
     end
   end
 
   def previews
+    @previews = ViewComponent::Preview.all
     if params[:path] == @preview.preview_name
       @page_title = "Component Previews for #{@preview.preview_name}"
       render "view_components/previews", **determine_layout
@@ -39,7 +40,8 @@ class PreviewController < ApplicationController
     end
   end
 
-private
+  private
+
   def default_preview_layout
     ViewComponent::Base.default_preview_layout
   end

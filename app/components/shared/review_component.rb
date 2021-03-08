@@ -1,4 +1,4 @@
-class Shared::ReviewComponent < GovukComponent::Base
+class ReviewComponent < GovukComponent::Base
   attr_accessor :id, :title, :edit_link, :summary
 
   def initialize(id:, title:, edit_link: nil, summary: nil, classes: [], html_attributes: {})
